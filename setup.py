@@ -9,7 +9,7 @@ import os
 import sys
 from shutil import rmtree
 
-from setuptools import find_packages, setup, Command
+from setuptools import find_packages, setup, Command, Extension
 
 # Package meta-data.
 NAME = 'accel'
@@ -85,14 +85,10 @@ setup(
     author_email=EMAIL,
     url=URL,
     packages=find_packages(exclude=('tests',)),
+    ext_modules=[Extension("_core", ["accel/_core.c", ])],
     # If your package is a single module, use this instead of 'packages':
     # py_modules=['slideshows'],
 
-    entry_points={
-        'console_scripts': [
-            'accel=accel:main',
-        ],
-    },
     install_requires=REQUIRED,
     include_package_data=True,
     license='MIT',
