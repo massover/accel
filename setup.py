@@ -19,9 +19,7 @@ EMAIL = 'joshua.massover@gmail.com'
 AUTHOR = 'Joshua Massover'
 
 # What packages are required for this module to be executed?
-REQUIRED = [
-   'psycopg2', 'sqlalchemy', 'sqlalchemy-wrapper', 'sqlalchemy-redshift',
-]
+REQUIRED = []
 
 # The rest you shouldn't have to touch too much :)
 # ------------------------------------------------
@@ -74,6 +72,12 @@ class UploadCommand(Command):
 
         sys.exit()
 
+extra_compile_args = ["-DSDX_PLATFORM=xilinx:aws-vu9p-f1:4ddr-xpr-2pr:4.0",
+                      "-D__USE_XOPEN2K8", "-I/opt/Xilinx/SDx/2017.1.op/runtime/include/1_2/",
+                      "-I/opt/Xilinx/SDx/2017.1.op/Vivado_HLS/include/"]
+
+extra_link_args = ["-shared", "-lxilinxopencl", "-lpthread", "-lrt",
+                    "-L/opt/Xilinx/SDx/2017.1.op/runtime/lib/x86_64", "-lstdc++", ]
 
 # Where the magic happens:
 setup(
@@ -85,7 +89,17 @@ setup(
     author_email=EMAIL,
     url=URL,
     packages=find_packages(exclude=('tests',)),
-    ext_modules=[Extension("_core", ["accel/_core.c", ])],
+    ext_modules=[Extension(
+        "_core",
+        ["accel/_core.c", "src/host.cpp", "src/xcl2.cpp"],
+        extra_compile_args=extra_compile_args,
+        extra_link_args=extra_link_args,
+        language='c++14',
+        runtime_library_dirs=[
+            "/opt/Xilinx/SDx/2017.1.rte/runtime/lib/x86_64/",
+        ],
+
+    )],
     # If your package is a single module, use this instead of 'packages':
     # py_modules=['slideshows'],
 
