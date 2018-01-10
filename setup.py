@@ -19,9 +19,7 @@ EMAIL = 'joshua.massover@gmail.com'
 AUTHOR = 'Joshua Massover'
 
 # What packages are required for this module to be executed?
-REQUIRED = [
-   'psycopg2', 'sqlalchemy', 'sqlalchemy-wrapper', 'sqlalchemy-redshift',
-]
+REQUIRED = []
 
 # The rest you shouldn't have to touch too much :)
 # ------------------------------------------------
