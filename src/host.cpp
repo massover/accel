@@ -111,39 +111,3 @@ vector<int, aligned_allocator<int>> vector_sub(
 
 	return source_results;
 }
-
-
-
-// This example illustrates the very simple OpenCL example that performs
-// an addition on two vectors
-int main(int argc, char **argv) {
-	if (argc != 3){
-		std::cout << "Please provide integers to add" << std::endl;
-		return 1;
-	}
-
-    // Creates a vector of DATA_SIZE elements with an initial value
-    // passed in as arguments
-    vector<int,aligned_allocator<int>> source_a(DATA_SIZE, atoi(argv[1]));
-    vector<int,aligned_allocator<int>> source_b(DATA_SIZE, atoi(argv[2]));
-    vector<int,aligned_allocator<int>> source_results(DATA_SIZE);
-
-    source_results = vector_sub(source_a, source_b);
-
-    int match = 0;
-    printf("Result = \n");
-    for (int i = 0; i < DATA_SIZE; i++) {
-        int host_result = source_a[i] - source_b[i];
-        if (source_results[i] != host_result) {
-            printf(error_message.c_str(), i, host_result, source_results[i]);
-            match = 1;
-            break;
-        } else {
-          printf("%d ", source_results[i]);
-          if (((i + 1) % 16) == 0) printf("\n");
-        }
-    }
-
-    std::cout << "TEST " << (match ? "FAILED" : "PASSED") << std::endl; 
-    return (match ? EXIT_FAILURE :  EXIT_SUCCESS);
-}

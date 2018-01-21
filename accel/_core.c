@@ -1,4 +1,5 @@
 #include <Python.h>
+#include "../src/host.hpp"
 
 static char module_docstring[] =
     "This module provides an interface for doing vector subtraction.";
@@ -35,9 +36,12 @@ static PyObject *core_vector_sub(PyObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, "OO", &vector_a, &vector_b, &yerr_obj))
         return NULL;
 
+    vector<int, aligned_allocator<int>> source_a;
+    vector<int, aligned_allocator<int>> source_b;
+    vector<int, aligned_allocator<int>> source_results;
+
     PyObject* sequence_a;
     PyObject* sequence_b;
-    PyObject *vector = PyList_New(PyList_Size(vector_a));
     long len;
     int i;
 
@@ -46,9 +50,17 @@ static PyObject *core_vector_sub(PyObject *self, PyObject *args)
     len = PySequence_Size(vector_a);
     for (i = 0; i < len; i++) {
         PyObject* a_i = PySequence_Fast_GET_ITEM(sequence_a, i);
+        source_a.push_back(PyLong_AsLong(a_i));
         PyObject* b_i = PySequence_Fast_GET_ITEM(sequence_b, i);
-        PyObject* result = PyNumber_Subtract(a_i, b_i);
-        PyList_SetItem(vector, i, result);
+        source_b.push_back(PyLong_AsLong(b_i));
+    }
+
+    source_results = vector_sub(source_a, source_b);
+    PyObject *vector = PyList_New(source_a.size());
+
+    for (i = 0; i < len; i++) {
+        PyObject *value = PyLong_FromLong( (long) source_results[i] );
+        PyList_SetItem(vector, i, value);
     }
 
     /* Build the output tuple */
