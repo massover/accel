@@ -6,3 +6,6 @@ build/
 *.egg-info
 *pyc
 *so
+
+sdaccel_profile_summary.csv
+sdaccel_profile_summary.html
