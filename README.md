@@ -28,5 +28,5 @@ accel.vector_sub([5, 4, 3, 2, 1], [1, 1, 1, 1, 1])
 ## Compile
 
 ```
-python setup.py build_ext --inplace
+make build
 ```
